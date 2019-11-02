@@ -183,3 +183,7 @@ fabric.properties
 *.iml
 modules.xml
 *.ipr
+
+### User defined entries ###
+# Virtualenv folder
+.env
