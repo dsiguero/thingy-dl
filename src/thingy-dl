@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+import tempfile
+import sys
+import os
+
+from multiprocessing.pool import ThreadPool
+
+from clint import arguments
+
+from webscrape import get_thing_details, display_thing_details
+from download import download_file
+from zip import zipdir
+
+from time import time as timer
+
+def main(thing_id):
+    # thing_id = 3182917
+
+    thing_details = get_thing_details(thing_id)
+    display_thing_details(thing_details)
+
+    # Create temp folder
+    with tempfile.TemporaryDirectory() as dir:
+        print(dir)
+
+        # and download all the files to the temp folder
+        start = timer()
+        for thing_file in thing_details['files']:
+            download_file(thing_file['href'], thing_file['name'], dir)
+
+        print(f"Elapsed Time: {timer() - start}")
+
+        # thing_file = thing_details['files'][0]
+        # download_file(thing_file['href'], thing_file['name'], dir)
+
+        # Finally create a zip file in the current dir
+        zipdir(dir, thing_id)
+
+
+if __name__ == '__main__':
+    import logging.config
+    loglevel = os.environ.get('THINGY_DL_LOGLEVEL', 'INFO')
+    logging.basicConfig(stream=sys.stdout, level=logging.getLevelName(loglevel))
+
+    args = arguments.Args()
+    thing_id_arg = args.get(0)
+
+    if thing_id_arg is None or len(args) != 1:
+        print('USAGE:')
+        exit(1)
+
+    main(thing_id_arg)
