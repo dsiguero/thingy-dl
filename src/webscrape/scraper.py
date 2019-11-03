@@ -1,11 +1,8 @@
 import requests
-import logging
 
 from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup
-from clint.textui import puts
 
-logger = logging.getLogger(__name__)
 
 thing_base_url = 'https://www.thingiverse.com/thing:{thing_id}'
 files_suffix = 'files'
@@ -37,13 +34,6 @@ def get_thing_details(thing):
         result['files'] = list(map(lambda x: {
             'href': urljoin(base_domain, x['href']),
             'name': x.select_one('span span.inline-middle div.truncate').get_text('', strip=True)
-            # 'name': x.findAll('span', attrs={'class': 'inline-middle'})
         }, soup.find_all('a', attrs={'class': 'file-download', 'href': True})))
 
         return result
-
-
-def display_thing_details(thing_details):
-    puts('\tURL: %s' % thing_details['url'])
-    puts('\tID: %s' % thing_details['id'])
-    puts('\tFiles: %s' % len(thing_details['files']))

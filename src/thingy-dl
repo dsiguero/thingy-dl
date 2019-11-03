@@ -6,9 +6,15 @@ import os
 from clint import arguments
 from clint.textui import puts, colored
 
-from webscrape import get_thing_details, display_thing_details
+from webscrape import get_thing_details
 from download import download_thing_files
 from zip import zipdir
+
+
+def display_thing_details(thing_details):
+    puts('\tURL: %s' % thing_details['url'])
+    puts('\tID: %s' % thing_details['id'])
+    puts('\tFiles: %s' % len(thing_details['files']))
 
 
 def main(thing_id):
