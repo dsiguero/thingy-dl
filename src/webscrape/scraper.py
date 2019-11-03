@@ -1,15 +1,15 @@
 import requests
-from urllib.parse import urlparse, urljoin, quote_plus
-from bs4 import BeautifulSoup
 import logging
+
+from urllib.parse import urlparse, urljoin
+from bs4 import BeautifulSoup
+from clint.textui import puts
 
 logger = logging.getLogger(__name__)
 
 thing_base_url = 'https://www.thingiverse.com/thing:{thing_id}'
 files_suffix = 'files'
-
-base_url = 'https://www.thingiverse.com/thing:{thing_id}/files'
-thing_id = '3182917'
+base_url = '%s/%s' % (thing_base_url, files_suffix)
 
 
 def get_base_domain(url):
@@ -25,13 +25,11 @@ def get_thing_details(thing):
     page = requests.get(thing_files_url)
 
     if page.status_code != 200:
-        print('There was an error while getting info for thing: %s' % thing)
+        raise Exception('There was an error while getting info for thing: %s' % thing)
         exit(1)
     else:
         result = {}
         soup = BeautifulSoup(page.text, 'html.parser')
-
-        print('Retrieving thing details...\n')
 
         result['url'] = thing_url
         result['id'] = thing
@@ -46,7 +44,6 @@ def get_thing_details(thing):
 
 
 def display_thing_details(thing_details):
-    print('Thing details')
-    print('URL: %s' % thing_details['url'])
-    print('ID: %s' % thing_details['id'])
-    print('Files: %s' % len(thing_details['files']))
+    puts('\tURL: %s' % thing_details['url'])
+    puts('\tID: %s' % thing_details['id'])
+    puts('\tFiles: %s' % len(thing_details['files']))

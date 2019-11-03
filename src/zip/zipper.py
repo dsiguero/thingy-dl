@@ -1,5 +1,4 @@
 import os
-import tempfile
 import zipfile
 import logging
 
@@ -14,6 +13,6 @@ def zipdir(src, dst):
         for file in files:
             absname = os.path.abspath(os.path.join(root, file))
             arcname = absname[len(abs_src) + 1:]
-            print('zipping %s as %s' % (os.path.join(root, file), arcname))
+            logger.debug('Zipping %s as %s' % (os.path.join(root, file), arcname))
             zipf.write(absname, arcname)
     zipf.close()

@@ -3,38 +3,32 @@ import tempfile
 import sys
 import os
 
-from multiprocessing.pool import ThreadPool
-
 from clint import arguments
+from clint.textui import puts, colored
 
 from webscrape import get_thing_details, display_thing_details
-from download import download_file
+from download import download_thing_files
 from zip import zipdir
 
-from time import time as timer
 
 def main(thing_id):
-    # thing_id = 3182917
+    try:
+        puts('Retrieving thing details...\n')
 
-    thing_details = get_thing_details(thing_id)
-    display_thing_details(thing_details)
+        thing_details = get_thing_details(thing_id)
+        display_thing_details(thing_details)
 
-    # Create temp folder
-    with tempfile.TemporaryDirectory() as dir:
-        print(dir)
+        # Create temp folder
+        puts('\nDownloading thing files...\n')
 
-        # and download all the files to the temp folder
-        start = timer()
-        for thing_file in thing_details['files']:
-            download_file(thing_file['href'], thing_file['name'], dir)
-
-        print(f"Elapsed Time: {timer() - start}")
-
-        # thing_file = thing_details['files'][0]
-        # download_file(thing_file['href'], thing_file['name'], dir)
-
-        # Finally create a zip file in the current dir
-        zipdir(dir, thing_id)
+        with tempfile.TemporaryDirectory() as tempdir:
+            # Download all the thing files...
+            download_thing_files(thing_details['files'], tempdir)
+            puts('\nBuidling %s.zip...' % thing_id)
+            zipdir(tempdir, thing_id)
+            puts(colored.green('DONE!'))
+    except Exception as e:
+        puts(colored.red(e.message))
 
 
 if __name__ == '__main__':
