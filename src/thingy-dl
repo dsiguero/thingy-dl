@@ -46,7 +46,7 @@ if __name__ == '__main__':
     thing_id_arg = args.get(0)
 
     if thing_id_arg is None or len(args) != 1:
-        print('USAGE:')
+        print('USAGE: thingy-dl <thing-id>')
         exit(1)
 
     main(thing_id_arg)
