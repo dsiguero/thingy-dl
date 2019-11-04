@@ -4,7 +4,6 @@ import logging
 
 from time import time as timer
 from functools import partial
-from clint.textui import puts
 
 from multiprocessing.dummy import Pool as ThreadPool
 
@@ -17,7 +16,7 @@ def download_file(folder, file_obj):
 
     full_filename = os.path.join(folder, file_name)
 
-    puts('\t%s ...' % file_name)
+    print('\t%s ...' % file_name)
 
     try:
         res = requests.get(file_url, allow_redirects=True)

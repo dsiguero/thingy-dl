@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 def zipdir(src, dst):
-    zipf = zipfile.ZipFile('%s.zip' % (dst), 'w', zipfile.ZIP_DEFLATED)
+    zipf = zipfile.ZipFile('%s.zip' % dst, 'w', zipfile.ZIP_DEFLATED)
 
     abs_src = os.path.abspath(src)
     for root, dirs, files in os.walk(src):

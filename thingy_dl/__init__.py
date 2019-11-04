@@ -1,0 +1,1 @@
+from .thingy_dl import get_thing
